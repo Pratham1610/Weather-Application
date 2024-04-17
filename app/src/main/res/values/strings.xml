@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Weather Application</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="ok">OK</string>
+    <string name="permission_not_granted">This permission is required. App will not work properly if this permission is not granted. You can able it from setting click on the button to able it.</string>
+    <string name="permission_warning">This permission is required. App will not work properly if this permission is not granted</string>
+    <string name="weather_application">Storm Warning</string>
+    <string name="app_text">Weather Application</string>
+</resources>
