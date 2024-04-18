@@ -6,4 +6,9 @@
     <string name="permission_warning">This permission is required. App will not work properly if this permission is not granted</string>
     <string name="weather_application">Storm Warning</string>
     <string name="app_text">Weather Application</string>
+    <string name="weather_update">Weather Update</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint">Enter Your City</string>
+    <string name="search">Search</string>
 </resources>

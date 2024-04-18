@@ -47,8 +47,10 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     //added dependencies
-    //noinspection UseTomlInstead
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    //noinspection UseTomlInstead
-    implementation ("androidx.core:core-splashscreen:1.0.1")
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation (libs.androidx.core.splashscreen)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.okhttp)
+    implementation (libs.play.services.location)
 }

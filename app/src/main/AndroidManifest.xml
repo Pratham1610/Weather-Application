@@ -5,6 +5,8 @@
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherApplication"
         tools:targetApi="31">
+        <activity
+            android:name=".LandingScreenActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
