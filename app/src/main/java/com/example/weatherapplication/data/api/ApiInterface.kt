@@ -21,8 +21,6 @@ interface ApiInterface {
         @Query("appid") key: String
     ): Response<CurrentWeather>
 
-
-    // TODO: Forecast API is not working yet
     @GET("data/2.5/forecast")
     suspend fun getForecast(
     @Query("lat")  lat: String,

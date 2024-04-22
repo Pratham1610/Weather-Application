@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="heading_height">80dp</dimen>
+    <dimen name="heading_margin_top">16dp</dimen>
+    <dimen name="linear_layout_margin_top">16dp</dimen>
+    <dimen name="button_margin_bottom">40dp</dimen>
+
+    <dimen name="weather_item_width">390dp</dimen>
+    <dimen name="weather_item_height">80dp</dimen>
+    <dimen name="weather_item_margin_top">5dp</dimen>
+    <dimen name="weather_item_margin_bottom">10dp</dimen>
+    <dimen name="weather_layout_margin_top">40dp</dimen>
+    <dimen name="text_size_large">30sp</dimen>
+    <dimen name="text_size_medium">20sp</dimen>
+    <dimen name="text_size_small">45sp</dimen>
+</resources>

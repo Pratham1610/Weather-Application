@@ -53,4 +53,5 @@ dependencies {
     implementation (libs.converter.gson)
     implementation (libs.okhttp)
     implementation (libs.play.services.location)
+    implementation (libs.androidx.activity.v182)
 }
