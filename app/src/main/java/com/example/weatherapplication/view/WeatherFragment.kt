@@ -1,8 +1,6 @@
 package com.example.weatherapplication.view
 
-import android.graphics.Typeface
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +8,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapplication.R
 import com.example.weatherapplication.viewModel.WeatherViewModel
@@ -48,9 +45,9 @@ class WeatherFragment : Fragment() {
         minTemp = view.findViewById(R.id.minTemp)
         maxTemp = view.findViewById(R.id.maxTemp)
 
-        viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
+        viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
 
-        viewModel.currentWeather.observe(viewLifecycleOwner, Observer { currentWeather ->
+        viewModel.currentWeather.observe(viewLifecycleOwner) { currentWeather ->
             temperatureView.text = buildString {
                 val temperatureCelsius = currentWeather.main.temp - 273.15
                 append(String.format("%.2f", temperatureCelsius))
@@ -80,9 +77,9 @@ class WeatherFragment : Fragment() {
             }
             curCity.text = currentWeather.name
             detailWeather.text = currentWeather.weather[0].main
-        })
+        }
 
-        viewModel.cityLocationItem.observe(viewLifecycleOwner, Observer { cityLocationItem ->
+        viewModel.cityLocationItem.observe(viewLifecycleOwner) { cityLocationItem ->
             if (cityLocationItem.isNotEmpty()) {
                 val location = cityLocationItem[0]
                 lat = location.lat.toString()
@@ -91,8 +88,7 @@ class WeatherFragment : Fragment() {
             } else {
                 Toast.makeText(view.context, "Please Enter Correct City Name", Toast.LENGTH_LONG).show()
             }
-        })
-
+        }
         city = arguments?.getString("city") ?: ""
         lat = arguments?.getString("lat") ?: ""
         lon = arguments?.getString("lon") ?: ""
@@ -102,11 +98,8 @@ class WeatherFragment : Fragment() {
         } else {
             viewModel.getLatLon(city, 1)
         }
-
         return view
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

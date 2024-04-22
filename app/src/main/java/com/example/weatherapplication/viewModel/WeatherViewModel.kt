@@ -9,7 +9,6 @@ import com.example.weatherapplication.model.CityLocationItem
 import com.example.weatherapplication.model.CurrentWeather
 import com.example.weatherapplication.utilities.LogD
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class WeatherViewModel : ViewModel() {
 
@@ -29,7 +28,7 @@ class WeatherViewModel : ViewModel() {
             if (response.isSuccessful) {
                 _cityLocationItem.value = response.body()
             } else {
-                LogD("error", "latlon Api")
+                LogD("error", "LatLon Api")
             }
         }
     }
