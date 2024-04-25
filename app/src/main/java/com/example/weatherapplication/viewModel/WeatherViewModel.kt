@@ -22,25 +22,68 @@ class WeatherViewModel : ViewModel() {
     private val _currentWeather = MutableLiveData<CurrentWeather>()
     val currentWeather: LiveData<CurrentWeather> = _currentWeather
 
+    private val _isLoading = MutableLiveData<Boolean>(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _isSuccessfully = MutableLiveData<Boolean>(true)
+    val isSuccessful: LiveData<Boolean> = _isSuccessfully
+
     fun getLatLon(city: String, limit: Int) {
+        _isLoading.value = true
+        _isSuccessfully.value = true
         viewModelScope.launch {
-            val response = apiService.getLatLon(city, limit, key)
-            if (response.isSuccessful) {
-                _cityLocationItem.value = response.body()
-            } else {
-                LogD("error", "LatLon Api")
+            try {
+                val response = apiService.getLatLon(city, limit, key)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (!responseBody.isNullOrEmpty()) {
+                        LogD("API OUTPUT latlog: ", responseBody.toString())
+                        _isSuccessfully.value = true
+                        _cityLocationItem.value = responseBody?:null
+                    } else {
+                        _isSuccessfully.value = false
+                        LogD("error", "Empty response body")
+                    }
+                } else {
+                    _isSuccessfully.value = false
+                    LogD("error", "Unsuccessful response")
+                }
+            } catch (e: Exception) {
+                _isSuccessfully.value = false
+                LogD("error", "Exception: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun getCurrentWeather(lat: String, lon: String) {
+        _isLoading.value = true
+        _isSuccessfully.value = true
         viewModelScope.launch {
-            val response = apiService.getWeather(lat, lon, key)
-            if (response.isSuccessful) {
-                _currentWeather.value = response.body()
-            } else {
-                LogD("error", "weather Api")
+            try {
+                val response = apiService.getWeather(lat, lon, key)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null && responseBody.toString().isNotEmpty()) {
+                        LogD("API OUTPUT 1: ", responseBody.toString())
+                        _isSuccessfully.value = true
+                        _currentWeather.value = responseBody?:null
+                    } else {
+                        _isSuccessfully.value = false
+                        LogD("error", "Empty response body")
+                    }
+                } else {
+                    _isSuccessfully.value = false
+                    LogD("error", "Unsuccessful response")
+                }
+            } catch (e: Exception) {
+                _isSuccessfully.value = false
+                LogD("error", "Exception: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
         }
     }
+
 }

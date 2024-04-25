@@ -23,6 +23,7 @@ class LandingScreenActivity : AppCompatActivity() {
     private var lat: String = ""
     private var lon: String = ""
     private val weatherFragment = WeatherFragment()
+    private val NotFoundFragment = NotFoundFragment()
     private val bundle = Bundle()
     private val permission = PermissionMain(this, this)
 
@@ -37,9 +38,16 @@ class LandingScreenActivity : AppCompatActivity() {
         }
         val btnSub = findViewById<Button>(R.id.btnSearch)
         btnSub.setOnClickListener{
+            supportFragmentManager.beginTransaction()
+                .remove(weatherFragment)
+                .commit()
             closeKeyboard(this)
             city = findViewById<EditText>(R.id.search).text.toString()
             if(city.isEmpty()){
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.mainScreen, NotFoundFragment)
+                    commit()
+                }
                 Toast.makeText(this, "Please enter the City Name", Toast.LENGTH_LONG).show()
             }
             else {
@@ -49,7 +57,6 @@ class LandingScreenActivity : AppCompatActivity() {
                 weatherFragment.apply {
                     arguments = bundle
                 }
-                supportFragmentManager.beginTransaction().remove(weatherFragment).commit()
                 supportFragmentManager.beginTransaction().apply {
                     replace(R.id.mainScreen, weatherFragment)
                     addToBackStack(null)

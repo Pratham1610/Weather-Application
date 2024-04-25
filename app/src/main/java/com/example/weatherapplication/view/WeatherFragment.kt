@@ -1,5 +1,6 @@
 package com.example.weatherapplication.view
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapplication.R
+import com.example.weatherapplication.utilities.LogD
 import com.example.weatherapplication.viewModel.WeatherViewModel
 
 class WeatherFragment : Fragment() {
@@ -24,11 +26,10 @@ class WeatherFragment : Fragment() {
     private lateinit var minTemp: TextView
     private lateinit var maxTemp: TextView
     private lateinit var mainWeather: LinearLayout
-
+    private lateinit var mProgressDialog: ProgressDialog
     private var city: String = ""
     private var lat: String = ""
     private var lon: String = ""
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,8 +45,30 @@ class WeatherFragment : Fragment() {
         detailWeather = view.findViewById(R.id.detailweather)
         minTemp = view.findViewById(R.id.minTemp)
         maxTemp = view.findViewById(R.id.maxTemp)
-
         viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
+        mProgressDialog = ProgressDialog(view.context)
+        mProgressDialog.setTitle("Loading")
+        mProgressDialog.setMessage("Please Wait!!")
+        mProgressDialog.setCancelable(false)
+        viewModel.isLoading.observe(viewLifecycleOwner){
+            if(it){
+                showProgressDialog()
+            }
+            else{
+                dismissProgressDialog()
+            }
+        }
+
+        viewModel.isSuccessful.observe(viewLifecycleOwner) { isSuccess ->
+            if (!isSuccess) {
+                Toast.makeText(requireContext(), "Please Enter Correct City Name", Toast.LENGTH_SHORT)
+                    .show()
+                val errorFragment = NotFoundFragment()
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.mainScreen, errorFragment)
+                    .commit()
+            }
+        }
 
         viewModel.currentWeather.observe(viewLifecycleOwner) { currentWeather ->
             temperatureView.text = buildString {
@@ -86,9 +109,11 @@ class WeatherFragment : Fragment() {
                 lon = location.lon.toString()
                 viewModel.getCurrentWeather(lat, lon)
             } else {
-                Toast.makeText(view.context, "Please Enter Correct City Name", Toast.LENGTH_LONG).show()
+//                Toast.makeText(view.context, "Please Enter Correct City Name", Toast.LENGTH_SHORT).show()
             }
         }
+
+
         city = arguments?.getString("city") ?: ""
         lat = arguments?.getString("lat") ?: ""
         lon = arguments?.getString("lon") ?: ""
@@ -105,5 +130,13 @@ class WeatherFragment : Fragment() {
         super.onDestroyView()
         viewModel.currentWeather.removeObservers(viewLifecycleOwner)
         viewModel.cityLocationItem.removeObservers(viewLifecycleOwner)
+    }
+
+    private fun showProgressDialog() {
+        mProgressDialog.show()
+    }
+
+    private fun dismissProgressDialog() {
+        mProgressDialog.dismiss()
     }
 }

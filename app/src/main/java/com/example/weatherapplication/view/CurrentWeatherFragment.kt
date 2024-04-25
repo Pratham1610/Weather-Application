@@ -1,5 +1,6 @@
 package com.example.weatherapplication.view
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ class CurrentWeatherFragment : Fragment() {
     private lateinit var curCity: TextView
     private lateinit var maxTemp: TextView
     private lateinit var mainWeather: LinearLayout
+    private lateinit var mProgressDialog: ProgressDialog
     private var lat: String = ""
     private var lon: String = ""
 
@@ -40,6 +42,18 @@ class CurrentWeatherFragment : Fragment() {
         minTemp = view.findViewById(R.id.minTemp)
         maxTemp = view.findViewById(R.id.maxTemp)
         viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
+        mProgressDialog = ProgressDialog(view.context)
+        mProgressDialog.setTitle("Loading")
+        mProgressDialog.setMessage("Please Wait!!")
+        mProgressDialog.setCancelable(false)
+        viewModel.isLoading.observe(viewLifecycleOwner){
+            if(it){
+                showProgressDialog()
+            }
+            else{
+                dismissProgressDialog()
+            }
+        }
         viewModel.currentWeather.observe(viewLifecycleOwner) { currentWeather ->
             temperatureView.text = buildString {
                 val temperatureCelsius = currentWeather.main.temp - 273.15
@@ -79,5 +93,13 @@ class CurrentWeatherFragment : Fragment() {
         super.onDestroyView()
         viewModel.currentWeather.removeObservers(viewLifecycleOwner)
         viewModel.cityLocationItem.removeObservers(viewLifecycleOwner)
+    }
+
+    private fun showProgressDialog() {
+        mProgressDialog.show()
+    }
+
+    private fun dismissProgressDialog() {
+        mProgressDialog.dismiss()
     }
 }
