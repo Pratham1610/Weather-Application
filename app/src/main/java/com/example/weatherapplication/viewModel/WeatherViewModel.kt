@@ -8,6 +8,7 @@ import com.example.weatherapplication.data.api.RetrofitClient
 import com.example.weatherapplication.model.CityLocationItem
 import com.example.weatherapplication.model.CurrentWeather
 import com.example.weatherapplication.utilities.LogD
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class WeatherViewModel : ViewModel() {
@@ -28,10 +29,15 @@ class WeatherViewModel : ViewModel() {
     private val _isSuccessfully = MutableLiveData<Boolean>(true)
     val isSuccessful: LiveData<Boolean> = _isSuccessfully
 
+    private var api1job: Job? = null
+    private var api2job: Job? = null
+    init {
+        destroyJob()
+    };
     fun getLatLon(city: String, limit: Int) {
         _isLoading.value = true
         _isSuccessfully.value = true
-        viewModelScope.launch {
+        api1job = viewModelScope.launch {
             try {
                 val response = apiService.getLatLon(city, limit, key)
                 if (response.isSuccessful) {
@@ -51,16 +57,15 @@ class WeatherViewModel : ViewModel() {
             } catch (e: Exception) {
                 _isSuccessfully.value = false
                 LogD("error", "Exception: ${e.message}")
-            } finally {
-                _isLoading.value = false
             }
+            _isLoading.value = false
         }
     }
 
     fun getCurrentWeather(lat: String, lon: String) {
         _isLoading.value = true
         _isSuccessfully.value = true
-        viewModelScope.launch {
+        api2job = viewModelScope.launch {
             try {
                 val response = apiService.getWeather(lat, lon, key)
                 if (response.isSuccessful) {
@@ -80,10 +85,26 @@ class WeatherViewModel : ViewModel() {
             } catch (e: Exception) {
                 _isSuccessfully.value = false
                 LogD("error", "Exception: ${e.message}")
-            } finally {
-                _isLoading.value = false
             }
+            _isLoading.value = false
         }
+    }
+    fun destroyJob(){
+        LogD("destroy", "here")
+        api1job?.let { job ->
+            LogD("WeatherViewModel", "Cancelling previous job")
+            job.cancel()
+        }
+        api2job?.let { job ->
+            LogD("WeatherViewModel", "Cancelling previous job")
+            job.cancel()
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        api1job?.cancel()
+        api2job?.cancel()
     }
 
 }

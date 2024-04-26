@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapplication.R
-import com.example.weatherapplication.utilities.LogD
 import com.example.weatherapplication.viewModel.WeatherViewModel
 
 class WeatherFragment : Fragment() {
@@ -108,8 +107,6 @@ class WeatherFragment : Fragment() {
                 lat = location.lat.toString()
                 lon = location.lon.toString()
                 viewModel.getCurrentWeather(lat, lon)
-            } else {
-//                Toast.makeText(view.context, "Please Enter Correct City Name", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -127,9 +124,11 @@ class WeatherFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         viewModel.currentWeather.removeObservers(viewLifecycleOwner)
         viewModel.cityLocationItem.removeObservers(viewLifecycleOwner)
+        viewModel.isLoading.removeObservers(viewLifecycleOwner)
+        viewModel.isSuccessful.removeObservers(viewLifecycleOwner)
+        super.onDestroyView()
     }
 
     private fun showProgressDialog() {

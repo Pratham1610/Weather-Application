@@ -90,9 +90,9 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         viewModel.currentWeather.removeObservers(viewLifecycleOwner)
-        viewModel.cityLocationItem.removeObservers(viewLifecycleOwner)
+        viewModel.isLoading.removeObservers(viewLifecycleOwner)
+        super.onDestroyView()
     }
 
     private fun showProgressDialog() {

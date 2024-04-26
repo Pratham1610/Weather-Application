@@ -3,8 +3,10 @@ package com.example.weatherapplication.view
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,8 +17,8 @@ import com.example.weatherapplication.viewModel.PermissionMain
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
-class LandingScreenActivity : AppCompatActivity() {
 
+class LandingScreenActivity : AppCompatActivity() {
     private lateinit var city: String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
@@ -36,8 +38,10 @@ class LandingScreenActivity : AppCompatActivity() {
         if(permission.isLocationPermissionGranted()){
             getLastLocation()
         }
+        var mainScreen = findViewById<FrameLayout>(R.id.mainScreen)
         val btnSub = findViewById<Button>(R.id.btnSearch)
         btnSub.setOnClickListener{
+            btnSub.setEnabled(false)
             supportFragmentManager.beginTransaction()
                 .remove(weatherFragment)
                 .commit()
@@ -63,16 +67,24 @@ class LandingScreenActivity : AppCompatActivity() {
                     commit()
                 }
             }
+            Handler().postDelayed(Runnable {
+                btnSub.setEnabled(true)
+            },500)
         }
 
         val currentBtn = findViewById<Button>(R.id.currentWeather)
         currentBtn.setOnClickListener {
+            mainScreen.removeAllViews()
+            currentBtn.setEnabled(false)
             closeKeyboard(this)
             if (!permission.isLocationPermissionGranted()) {
                 permission.requestPermission()
             } else {
                 getLastLocation()
             }
+            Handler().postDelayed(Runnable {
+                currentBtn.setEnabled(true)
+            }, 500)
         }
     }
     @SuppressLint("MissingPermission")
@@ -95,5 +107,8 @@ class LandingScreenActivity : AppCompatActivity() {
         }
     }
 
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 }
